@@ -1,5 +1,6 @@
 variable "prefix" {
   description = "The Prefix used for all resources in this example"
+  default     = "fom16"
 }
 
 variable "location" {
@@ -21,4 +22,4 @@ variable "tenant" {
 
 variable "subscription_id" {
   description = "subscription_id of the service principal"
-} 
+}

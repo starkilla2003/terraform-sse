@@ -3,8 +3,13 @@ provider "azurerm" {
   client_id       = var.appId
   client_secret   = var.password
   tenant_id       = var.tenant
+  /*   subscription_id = ""
+  client_id       = ""
+  client_secret   = ""
+  tenant_id       = "" */
   features {}
 }
+
 
 # grant the service principal/user access to the key vault to be able to create the key
 resource "azurerm_key_vault_access_policy" "service-principal" {
@@ -87,7 +92,7 @@ data "azurerm_role_definition" "reader" {
 # grant the Managed Identity of the Disk Encryption Set "Reader" access to the Key Vault
 resource "azurerm_role_assignment" "disk-encryption-read-keyvault" {
   scope                = azurerm_key_vault.test.id
-  role_definition_name = "${data.azurerm_subscription.current.id}${data.azurerm_role_definition.reader.id}"
+  role_definition_name = "Reader"
   principal_id         = azurerm_disk_encryption_set.test.identity.0.principal_id
 }
 
@@ -102,7 +107,9 @@ resource "azurerm_managed_disk" "test" {
   disk_encryption_set_id = azurerm_disk_encryption_set.test.id
 
   depends_on = [
-    /*  "azurerm_role_assignment.disk-encryption-read-keyvault", */
+    "azurerm_role_assignment.disk-encryption-read-keyvault",
     "azurerm_key_vault_access_policy.disk-encryption",
   ]
 }
+
+
